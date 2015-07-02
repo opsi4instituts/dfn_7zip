@@ -1,0 +1,39 @@
+[Package]
+version: 1
+depends:
+incremental: False
+
+[Product]
+type: localboot
+id: dfn_7zip
+name: 7zip
+description: 7-Zip ist ein freies Datenkompressionsprogramm mit einer hohen Kompressionsrate.
+advice: 
+version: 9.38
+priority: 0
+licenseRequired: False
+productClasses:
+setupScript: setup3264.opsiscript
+uninstallScript: uninstall3264.opsiscript
+updateScript: 
+alwaysScript: 
+onceScript: 
+customScript: 
+userLoginScript: 
+
+[ProductProperty]
+type: unicode
+name: install_architecture
+multivalue: False
+editable: False
+description: Defines wether to install the version of 64bit, 32bit, both or automatic detection.
+values: ["32 only", "64 only", "both", "system specific"]
+default: ["system specific"]
+
+[Changelog]
+
+7zip (9.20-1) testing; urgency=low
+
+  * Initial package
+
+ -- Eric Esser <esser@wzb.eu>  Fri, 15 May 2015 10:19:19 +0000

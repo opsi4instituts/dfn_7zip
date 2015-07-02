@@ -1,0 +1,174 @@
+; Copyright (c) uib gmbh (www.uib.de)
+; This sourcecode is owned by uib
+; and published under the Terms of the General Public License.
+; credits: http://www.opsi.org/en/credits/
+
+; add the folowing product property to your control file
+
+;[ProductProperty]
+;type: unicode
+;name: install_architecture
+;multivalue: False
+;editable: False
+;description: which architecture (32/64 bit) has to be installed
+;values: ["32 only", "64 only", "both", "system specific"]
+;default: ["system specific"]
+
+[Initial]
+setLogLevel=6
+;  Log Errors in Logfile but don't abort:
+ExitOnError=False
+; Show syntax errors in the script:
+ScriptErrorMessages=on
+; Dont trace step by step through the script:
+TraceMode=off
+; let started programs run in front of the winst window
+StayOnTop=False
+ 
+
+[Actions]
+requiredWinstVersion >= "4.11.4.6"
+
+DefVar $MsiId32$
+DefVar $MsiId64$
+DefVar $LogDir$
+DefVar $ProductId$  
+DefVar $MinimumSpace$
+DefVar $ExitCode$
+DefVar $ErrorMsg$
+DefVar $LicenseRequired$
+DefVar $LicenseKey$
+DefVar $LicensePool$
+DefVar $INST_SystemType$
+DefVar $INST_architecture$
+DefVar $PrettyName$
+DefVar $Version$
+
+Set $INST_SystemType$ = GetSystemType
+set $INST_architecture$ = GetProductProperty("install_architecture","system specific")
+
+Set $LogDir$ = "%opsiLogDir%"
+
+include_append "%ScriptPath%\check_msi_exitcode.opsiscript"
+
+; ----------------------------------------------------------------
+; - Please edit the following values                             -
+; ----------------------------------------------------------------
+;$ProductId$ should be the name of the product in opsi
+; therefore please: only lower letters, no umlauts, 
+; no white space use '-' as a seperator
+Set $ProductId$       = "7zip"
+Set $MinimumSpace$    = "10 MB"
+; the path were we find the product after the installation
+Set $LicenseRequired$ = "false"
+Set $LicensePool$     = "p_" + $ProductId$
+Set $Version$					= "9.38"
+Set $PrettyName$			= "7-Zip"
+Set $MsiId32$					= "7z938.msi"
+Set $MsiId64$					= "7z938-x64.msi"
+; ----------------------------------------------------------------
+if not(HasMinimumSpace ("%SystemDrive%", $MinimumSpace$))
+	LogError "Not enough space on %SystemDrive%, " + $MinimumSpace$ + " on drive %SystemDrive% needed for " + $ProductId$
+	isFatalError
+	; Stop process and set installation status to failed
+else
+	if FileExists("%ScriptPath%\delsub3264.opsiscript")
+		comment "Start uninstall sub section"
+		Sub "%ScriptPath%\delsub3264.opsiscript"
+	endif
+
+	comment "Show product picture"
+	ShowBitmap "%ScriptPath%\" + $ProductId$ + ".png" $PrettyName$ + " " + $Version$
+	
+	if $LicenseRequired$ = "true"
+		comment "Licensing required, reserve license and get license key"
+		Sub_get_licensekey
+	endif
+	
+	comment "installing"
+
+	if (($INST_SystemType$ = "x86 System") and ($INST_architecture$ = "system specific")) or ($INST_architecture$ = "both") or ($INST_architecture$ = "32 only")
+		Message "Installing " + $ProductId$ + " 32 Bit..."
+		comment "Start setup program"
+		ChangeDirectory "%SCRIPTPATH%"
+		Winbatch_install_32
+		Sub_check_exitcode
+	endif
+
+	if ($INST_SystemType$ = "64 Bit System") and (($INST_architecture$ = "system specific") or ($INST_architecture$ = "both") or ($INST_architecture$ = "64 only"))
+		Message "Installing " + $ProductId$ + " 64 Bit..."
+		comment "Start setup program"
+		ChangeDirectory "%SCRIPTPATH%"
+		Winbatch_install_64
+		Sub_check_exitcode
+	endif
+	
+endif
+
+[Winbatch_install_32]
+msiexec /i "%ScriptPath%\$MsiId32$" /l* "$LogDir$\$ProductId$.install_log.txt" /qb! ALLUSERS=1 REBOOT=ReallySuppress
+
+[Winbatch_install_64]
+msiexec /i "%ScriptPath%\$MsiId64$" /l* "$LogDir$\$ProductId$.install_log.txt" /qb! ALLUSERS=1 REBOOT=ReallySuppress
+
+[Sub_get_licensekey]
+comment "License management is enabled and will be used"
+
+comment "Trying to get a license key"
+Set $LicenseKey$ = demandLicenseKey ($LicensePool$)
+; If there is an assignment of exactly one licensepool to the product the following call is possible:
+; Set $LicenseKey$ = demandLicenseKey ("", $ProductId$)
+;
+; If there is an assignment of a license pool to a windows software id, it is possible to use:
+; DefVar $WindowsSoftwareId$
+; $WindowsSoftwareId$ = "..."
+; Set $LicenseKey$ = demandLicenseKey ("", "", $WindowsSoftwareId$)
+
+DefVar $ServiceErrorClass$
+set $ServiceErrorClass$ = getLastServiceErrorClass
+comment "Error class: " + $ServiceErrorClass$
+
+if $ServiceErrorClass$ = "None"
+	comment "Everything fine, we got the license key '" + $LicenseKey$ + "'"
+else
+	if $ServiceErrorClass$ = "LicenseConfigurationError"
+		LogError "Fatal: license configuration must be corrected"
+		LogError getLastServiceErrorMessage
+		isFatalError
+	else 
+		if $ServiceErrorClass$ = "LicenseMissingError"
+			LogError "Fatal: required license is not supplied"
+			isFatalError
+		endif
+	endif
+endif
+
+[Sub_check_exitcode]
+comment "Test for installation success via exit code"
+set $ExitCode$ = getLastExitCode
+; informations to exit codes see
+; http://msdn.microsoft.com/en-us/library/aa372835(VS.85).aspx
+; http://msdn.microsoft.com/en-us/library/aa368542.aspx
+if ($ExitCode$ = "0")
+	comment "Looks good: setup program gives exitcode zero"
+else
+	comment "Setup program gives a exitcode unequal zero: " + $ExitCode$
+	if ($ExitCode$ = "1605")
+		comment "ERROR_UNKNOWN_PRODUCT	1605	This action is only valid for products that are currently installed."
+		comment "Uninstall of a not installed product failed - no problem"
+	else
+		if ($ExitCode$ = "1641")
+			comment "looks good: setup program gives exitcode 1641"
+			comment "ERROR_SUCCESS_REBOOT_INITIATED	1641	The installer has initiated a restart. This message is indicative of a success."
+		else
+			if ($ExitCode$ = "3010")
+				comment "looks good: setup program gives exitcode 3010"
+				comment "ERROR_SUCCESS_REBOOT_REQUIRED	3010	A restart is required to complete the install. This message is indicative of a success."
+			else
+				logError "Fatal: Setup program gives an unknown exitcode unequal zero: " + $ExitCode$
+				isFatalError
+			endif
+		endif
+	endif
+endif
+

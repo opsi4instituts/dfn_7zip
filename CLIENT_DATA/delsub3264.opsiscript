@@ -27,6 +27,12 @@ Set $MsiList$ = addtolist($MsiList$, '{23170F69-40C1-2701-0938-000001000000}')
 ;7-Zip 9.38 (x64 edition)
 Set $MsiList$ = addtolist($MsiList$, '{23170F69-40C1-2702-0938-000001000000}')
 
+;7-Zip 15.12
+Set $MsiList$ = addtolist($MsiList$, '{23170F69-40C1-2701-1512-000001000000}')
+
+;7-Zip 15.12 (x64 edition)
+Set $MsiList$ = addtolist($MsiList$, '{23170F69-40C1-2702-1512-000001000000}')
+
 for %actmsi% in $msilist$ do sub_uninstallmsi
 
 [sub_uninstallmsi]

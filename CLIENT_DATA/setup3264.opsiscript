@@ -62,10 +62,10 @@ Set $MinimumSpace$    = "10 MB"
 ; the path were we find the product after the installation
 Set $LicenseRequired$ = "false"
 Set $LicensePool$     = "p_" + $ProductId$
-Set $Version$					= "9.38"
+Set $Version$					= "15.12"
 Set $PrettyName$			= "7-Zip"
-Set $MsiId32$					= "7z938.msi"
-Set $MsiId64$					= "7z938-x64.msi"
+Set $MsiId32$			= "7z1512.msi"
+Set $MsiId64$			= "7z1512-x64.msi"
 ; ----------------------------------------------------------------
 if not(HasMinimumSpace ("%SystemDrive%", $MinimumSpace$))
 	LogError "Not enough space on %SystemDrive%, " + $MinimumSpace$ + " on drive %SystemDrive% needed for " + $ProductId$

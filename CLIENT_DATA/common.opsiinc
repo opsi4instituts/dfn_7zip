@@ -1,0 +1,51 @@
+requiredWinstVersion >= "4.11.4.6"
+
+DefVar $InstFile$
+DefVar $InstFile32$
+DefVar $InstFile64$
+DefVar $LogDir$
+DefVar $ProductId$  
+DefVar $MinimumSpace$
+DefVar $ExitCode$
+DefVar $ErrorMsg$
+DefVar $INST_SystemType$
+DefVar $INST_architecture$
+DefVar $MSVersion$
+DefVar $PrettyName$
+DefVar $InstallDir$
+DefVar $PathToExe$
+DefVar $Exe$
+DefVar $RegPathUninstall$
+DefVar $RegId$
+DefVar $CustomPostInstall$
+DefVar $CustomPostDeinstall$
+DefVar $DesktopIcon$
+DefVar $SearchPattern$
+DefStringList $ResultList$
+
+Set $INST_SystemType$ = GetSystemType
+Set $MSVersion$	 = GetMsVersionInfo
+set $INST_architecture$ = GetProductProperty("install_architecture","system specific")
+
+Set $LogDir$ = "%opsiLogDir%"
+
+; ----------------------------------------------------------------
+Set $ProductId$      	= "7zip"
+Set $MinimumSpace$ 	= "10 MB"
+Set $PrettyName$	= "7-Zip"
+Set $InstFile32$	= "7z1512.msi"
+Set $InstFile64$	= "7z1512-x64.msi"
+Set $Exe$		= "7zFM.exe"
+Set $RegPathUninstall$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+; ----------------------------------------------------------------
+
+include_append "check_msi_exitcode.opsiscript"
+include_append "section_sub_search_registry3264_uninstall_keys.opsiinc"
+
+if not ($MSVersion$ = "6.1" OR $MSVersion$ = "10.0")
+	Logwarning "Only tested with windows 7 and 10! Please report to the maintainer successful installation on other windows versions."		
+endif
+if not ($INST_SystemType$ = "64 Bit System")
+	Logwarning "Only tested with 64 bit version! Please report to the maintainer successful installation on other windows versions."
+endif
+

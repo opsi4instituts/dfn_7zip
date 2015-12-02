@@ -1,3 +1,7 @@
 *.bak
 *.opsi
 *.msi
+*.md5
+*.zsync
+custom
+orig

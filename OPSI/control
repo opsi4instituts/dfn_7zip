@@ -1,5 +1,5 @@
 [Package]
-version: 1
+version: 2
 depends: 
 incremental: False
 
@@ -7,7 +7,7 @@ incremental: False
 type: localboot
 id: dfn_7zip
 name: 7zip
-description: 7-Zip ist ein freies Datenkompressionsprogramm mit einer hohen Kompressionsrate.
+description: Dateiarchivierungs- und Kompressionswerkzeug mit Unterstützung gängiger Formate
 advice: 
 version: 15.12
 priority: 0
@@ -26,14 +26,64 @@ type: unicode
 name: install_architecture
 multivalue: False
 editable: False
-description: Defines wether to install the version of 64bit, 32bit, both or automatic detection.
-values: ["32 only", "64 only", "both", "system specific"]
+description: Defines wether to install the version of 64bit, 32bit or automatic detection.
+values: ["32 only", "64 only", "system specific"]
 default: ["system specific"]
 
+[ProductProperty]
+type: unicode
+name: custom-post-install
+multivalue: False
+editable: False
+description: Define filename for include script in custom directory after installation
+values: ["none", "post-install.opsiinc"]
+default: ["none"]
+
+[ProductProperty]
+type: unicode
+name: custom-post-deinstall
+multivalue: False
+editable: False
+description: Define filename for include script in custom directory after deinstallation
+values: ["none", "post-deinstall.opsiinc"]
+default: ["none"]
+
+[ProductProperty]
+type: unicode
+name: desktopicon
+multivalue: False
+editable: False
+description: Icon on Desktop
+values: ["no", "yes"]
+default: ["no"]
+
 [Changelog]
+dfn_7zip (15.12-2)
+	* Feature "custom" Verzeichnis eingebaut (https://github.com/opsi4instituts/dfn_7zip/issues/1)
+	* intelligente Suche nach Installationen (https://opsi.wzb.eu/wiki/index.php/Uninstall-Registry_durchsuchen_und_Schl%C3%BCssel_ermitteln)
+	* Paketumbau und Aufräumen
+	* install_architecture 'both' entfernt, da nur die zuerst aufgerufene Version wirklich installiert wird
+	* ProductProperty Desktop-Icon hinzugefügt
+ -- Thomas Besser (archIT/KIT) <thomas.besser@kit.edu>, 01.12.2015
+
+dfn_7zip (15.12-1)
+	* neue Upstreamversion
+ -- Eric Esser <esser@wzb.eu>  Sun, 27 Nov 2015
+
 7zip (9.20-1) testing; urgency=low
 
   * Initial package
 
  -- Eric Esser <esser@wzb.eu>  Fri, 15 May 2015 10:19:19 +0000
+
+
+
+
+
+
+
+
+
+
+
 

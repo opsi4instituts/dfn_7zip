@@ -5,6 +5,7 @@ DefVar $InstFile32$
 DefVar $InstFile64$
 DefVar $LogDir$
 DefVar $ProductId$  
+DefVar $ProductVersion$
 DefVar $MinimumSpace$
 DefVar $ExitCode$
 DefVar $ErrorMsg$
@@ -27,14 +28,19 @@ Set $INST_SystemType$ = GetSystemType
 Set $MSVersion$	 = GetMsVersionInfo
 set $INST_architecture$ = GetProductProperty("install_architecture","system specific")
 
+Set $ProductVersion$ = takestring (0, splitString("%installingProdVersion%", "-"))
+; Besteht aus zwei Bereichen mit . getrennt: 16.00 
+; wird aber im Filename des MSI ohne Punkt verwendet, also Punkt weg ;-)
+Set $ProductVersion$ = takestring (0, splitString($ProductVersion$, ".")) + takestring (1, splitString($ProductVersion$, "."))
+
 Set $LogDir$ = "%opsiLogDir%"
 
 ; ----------------------------------------------------------------
 Set $ProductId$      	= "7zip"
 Set $MinimumSpace$ 	= "10 MB"
 Set $PrettyName$	= "7-Zip"
-Set $InstFile32$	= "7z1600.msi"
-Set $InstFile64$	= "7z1600-x64.msi"
+Set $InstFile32$	= "7z" + $ProductVersion$ + ".msi"
+Set $InstFile64$	= "7z" + $ProductVersion$ + "-x64.msi"
 Set $Exe$		= "7zFM.exe"
 Set $RegPathUninstall$ = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
 ; ----------------------------------------------------------------

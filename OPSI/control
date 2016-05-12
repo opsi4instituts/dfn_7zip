@@ -1,5 +1,5 @@
 [Package]
-version: 1
+version: 2
 depends: 
 incremental: False
 
@@ -58,8 +58,32 @@ values: ["no", "yes"]
 default: ["no"]
 
 [Changelog]
+dfn_7zip (16.00-2)
+	* Changelog repariert
+	* $ProductVersion$ aus control für $InstFile$
+ -- Thomas Besser (archIT/KIT) <thomas.besser@kit.edu>, 12.05.2016
+
+dfn_7zip (16.00-1)
+	* neue Upstreamversion
+ -- Eric Esser <esser@wzb.eu>, 11.05.2016
+
+dfn_7zip (15.12-2)
+	* Feature "custom" Verzeichnis eingebaut (https://github.com/opsi4instituts/dfn_7zip/issues/1)
+	* intelligente Suche nach Installationen (https://opsi.wzb.eu/wiki/index.php/Uninstall-Registry_durchsuchen_und_Schl%C3%BCssel_ermitteln)
+	* Paketumbau und Aufräumen
+	* install_architecture 'both' entfernt, da nur die zuerst aufgerufene Version wirklich installiert wird
+	* ProductProperty Desktop-Icon hinzugefügt
+ -- Thomas Besser (archIT/KIT) <thomas.besser@kit.edu>, 01.12.2015
+
+dfn_7zip (15.12-1)
+	* neue Upstreamversion
+ -- Eric Esser <esser@wzb.eu>  Sun, 27 Nov 2015
+
 7zip (9.20-1) testing; urgency=low
 
   * Initial package
 
  -- Eric Esser <esser@wzb.eu>  Fri, 15 May 2015 10:19:19 +0000
+
+
+

@@ -9,7 +9,7 @@ id: dfn_7zip
 name: 7zip
 description: Dateiarchivierungs- und Kompressionswerkzeug mit Unterstützung gängiger Formate
 advice: 
-version: 16.01
+version: 16.02
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -58,6 +58,10 @@ values: ["no", "yes"]
 default: ["no"]
 
 [Changelog]
+dfn_7zip (16.02-1)
+        * minor update
+ -- Detlef Krummel  <krummel@gei.de>, 02.06.2016
+
 dfn_7zip (16.01-1)
 	* Neuer Upstream (bugfixes)
  -- Thomas Besser (archIT/KIT) <thomas.besser@kit.edu>, 20.05.2016
@@ -88,6 +92,7 @@ dfn_7zip (15.12-1)
   * Initial package
 
  -- Eric Esser <esser@wzb.eu>  Fri, 15 May 2015 10:19:19 +0000
+
 
 
 

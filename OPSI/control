@@ -1,5 +1,5 @@
 [Package]
-version: 1
+version: 2
 depends: 
 incremental: False
 
@@ -58,6 +58,11 @@ values: ["no", "yes"]
 default: ["no"]
 
 [Changelog]
+dfn_7zip (16.02-2)
+	* Bugfix für Installation auf Win-32bit
+	* fehlerhaftes o4i-Logo getauscht
+-- Thomas Besser (archIT/KIT) <thomas.besser@kit.edu>, 08.06.2016
+
 dfn_7zip (16.02-1)
         * minor update
  -- Detlef Krummel  <krummel@gei.de>, 02.06.2016

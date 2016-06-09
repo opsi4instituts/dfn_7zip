@@ -51,7 +51,3 @@ include_append "section_sub_search_registry3264_uninstall_keys.opsiinc"
 if not ($MSVersion$ = "6.1" OR $MSVersion$ = "10.0")
 	Logwarning "Only tested with windows 7 and 10! Please report to the maintainer successful installation on other windows versions."		
 endif
-if not ($INST_SystemType$ = "64 Bit System")
-	Logwarning "Only tested with 64 bit version! Please report to the maintainer successful installation on other windows versions."
-endif
-

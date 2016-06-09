@@ -6,9 +6,11 @@ DefVar $PathToCmd$
 Set $ResultList$ = emptylist ($ResultList$)
 
 ; reg query liefert alle Zeilen, in denen Searchpattern gefunden wird, auch z.B. DisplayName
-; zuerst 64-Bit, daher ausführen mit 'cmd64.exe'
-Set $PathToCmd$ = "%SystemRoot%\cmd64.exe"
-Sub_search_and_filter
+if ($INST_SystemType$ = "64 Bit System")
+	; zuerst 64-Bit (falls überhaupt 64-Bit-System), daher ausführen mit 'cmd64.exe'
+	Set $PathToCmd$ = "%SystemRoot%\cmd64.exe"
+	Sub_search_and_filter
+endif
 ; jetzt noch 32-Bit, daher 'cmd.exe'
 Set $PathToCmd$ = "%System%\cmd.exe"
 Set $TempList$ = emptylist ($TempList$)

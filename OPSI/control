@@ -1,5 +1,5 @@
 [Package]
-version: 2
+version: 1
 depends: 
 incremental: False
 
@@ -9,7 +9,7 @@ id: dfn_7zip
 name: 7zip
 description: Dateiarchivierungs- und Kompressionswerkzeug mit Unterstützung gängiger Formate
 advice: 
-version: 16.02
+version: 16.03
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -58,6 +58,11 @@ values: ["no", "yes"]
 default: ["no"]
 
 [Changelog]
+dfn_7zip (16.03-1)
+	* neue Upstreamversion
+	* o4i-Logo aktualisiert
+-- Thomas Besser (archIT/KIT) <thomas.besser@kit.edu>, 29.09.2016
+
 dfn_7zip (16.02-2)
 	* Bugfix für Installation auf Win-32bit
 	* fehlerhaftes o4i-Logo getauscht

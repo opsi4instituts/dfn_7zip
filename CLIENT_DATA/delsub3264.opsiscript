@@ -1,10 +1,5 @@
-; Copyright (c) uib gmbh (www.uib.de)
-; This sourcecode is owned by uib gmbh
-; and published under the Terms of the General Public License.
-; credits: http://www.opsi.org/en/credits/
-
 ; Parameter: $SearchPattern$: Suchbegriff in Registry
-Set $SearchPattern$ = $PrettyName$
+Set $SearchPattern$ = $ProductName$
 Sub_search_registry3264_uninstall_keys
 ; Rückgabewert: $ResultList$ gefundene Einträge
 
@@ -12,11 +7,13 @@ if (count ($ResultList$) = "0")
 	comment "No installations of " + $SearchPattern$ + " found in registry"
 else
 	comment "Found at least one installation of " + $SearchPattern$ + " in registry, try to deinstall"
-	Message "Uninstalling " + $PrettyName$ + " ..."
+	Message "Uninstalling " + $ProductName$ + " ..."
 	for %s% in $ResultList$ do Sub_uninstall
 
 	comment "Delete common desktop icon, if any"
-	Linkfolder_uninstall_desktopicon	
+	if $DesktopLink$ = "True"
+        LinkFolder_delete_desktoplink
+    endif	
 
 	comment "include custom post deinstall file"
 	set $CustomPostDeinstall$ = getProductProperty("custom-post-deinstall","none")
@@ -29,13 +26,41 @@ endif
 
 [Sub_uninstall]
 Set $RegId$ = "%s%"
-Winbatch_uninstall_msi
-sub_check_exitcode
+
+; Patch um auch vorhandene Installation durch Exe-Installer zu deinstallieren (Danke an Martin Niebergall) 
+; we don't know at this point if RegId is 64 or 32 bit
+; try 64bit first
+Set $UninstallProgram$ = GetRegistryStringValue64("[" + $RegPathUninstall$ + "\" + $RegId$ + "] UninstallString")
+if contains(lower($UninstallProgram$), "msiexec")
+        Winbatch_uninstall_msi
+        sub_check_exitcode
+else    
+        if contains(lower($UninstallProgram$), "uninstall.exe")
+                Winbatch_uninstall_exe
+                ; TODO: check exit codes? same as MSI?
+        endif
+endif
+
+; retry the same for 32bit version
+Set $UninstallProgram$ = GetRegistryStringValue32("[" + $RegPathUninstall$ + "\" + $RegId$ + "] UninstallString")
+if contains(lower($UninstallProgram$), "msiexec")
+        Winbatch_uninstall_msi
+        sub_check_exitcode
+else    
+        if contains(lower($UninstallProgram$), "uninstall.exe")
+                Winbatch_uninstall_exe
+                ; TODO: check exit codes
+        endif
+endif
+
 
 [Winbatch_uninstall_msi]
-msiexec /x $RegId$ /qn REBOOT=ReallySuppress
+msiexec /x $RegId$ $SilentOption$ REBOOT=ReallySuppress
 
-[Linkfolder_uninstall_desktopicon]
+[Winbatch_uninstall_exe]
+"$UninstallProgram$" /S
+
+[Linkfolder_delete_desktopicon]
 set_basefolder common_desktopdirectory
 set_subfolder ""
-delete_element $PrettyName$
+delete_element $ProductName$

@@ -12,7 +12,7 @@ DefVar $ErrorMsg$
 DefVar $INST_SystemType$
 DefVar $INST_architecture$
 DefVar $MSVersion$
-DefVar $PrettyName$
+DefVar $ProductName$ 
 DefVar $InstallDir$
 DefVar $PathToExe$
 DefVar $Exe$
@@ -20,8 +20,10 @@ DefVar $RegPathUninstall$
 DefVar $RegId$
 DefVar $CustomPostInstall$
 DefVar $CustomPostDeinstall$
-DefVar $DesktopIcon$
+DefVar $DesktopLink$
+DefVar $SilentOption$
 DefVar $SearchPattern$
+DefVar $UninstallProgram$
 DefStringList $ResultList$
 
 Set $INST_SystemType$ = GetSystemType
@@ -33,12 +35,16 @@ Set $ProductVersion$ = takestring (0, splitString("%installingProdVersion%", "-"
 ; wird aber im Filename des MSI ohne Punkt verwendet, also Punkt weg ;-)
 Set $ProductVersion$ = takestring (0, splitString($ProductVersion$, ".")) + takestring (1, splitString($ProductVersion$, "."))
 
+Set $DesktopLink$ = GetProductProperty("desktop-link","False")
+
+Set $SilentOption$ = GetProductProperty("silent-option","/qb!")
+
 Set $LogDir$ = "%opsiLogDir%"
 
 ; ----------------------------------------------------------------
 Set $ProductId$      	= "7zip"
 Set $MinimumSpace$ 	= "10 MB"
-Set $PrettyName$	= "7-Zip"
+Set $ProductName$	= "7-Zip"
 Set $InstFile32$	= "7z" + $ProductVersion$ + ".msi"
 Set $InstFile64$	= "7z" + $ProductVersion$ + "-x64.msi"
 Set $Exe$		= "7zFM.exe"
@@ -50,4 +56,13 @@ include_append "section_sub_search_registry3264_uninstall_keys.opsiinc"
 
 if not ($MSVersion$ = "6.1" OR $MSVersion$ = "10.0")
 	Logwarning "Only tested with windows 7 and 10! Please report to the maintainer successful installation on other windows versions."		
+endif
+
+comment "Show product picture"
+if (FileExists("%ScriptPath%\..\lib\icons\%installingProdName%.png"))
+       comment "logo at local library/icons found."
+       ShowBitmap "%ScriptPath%\..\lib\icons\%installingProdName%.png" $ProductName$
+else
+       comment "no logo at local library/icons, use from ScriptPath ..."
+       ShowBitmap "%ScriptPath%\o4i.png" $ProductName$
 endif

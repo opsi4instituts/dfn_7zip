@@ -9,7 +9,7 @@ id: dfn_7zip
 name: 7zip
 description: Dateiarchivierungs- und Kompressionswerkzeug mit Unterstützung gängiger Formate
 advice: 
-version: 16.03
+version: 18.01
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -49,15 +49,33 @@ values: ["none", "post-deinstall.opsiinc"]
 default: ["none"]
 
 [ProductProperty]
+type: bool
+name: desktop-link
+description: Link on Desktop?
+default: False
+
+[ProductProperty]
 type: unicode
-name: desktopicon
+name: silent-option
 multivalue: False
 editable: False
-description: Icon on Desktop
-values: ["no", "yes"]
-default: ["no"]
+description: Un/Install silent (/qb!) or very silent (/qn); Show progressbar of installer or not
+values: ["/qb!", "/qn"]
+default: ["/qb!"]
 
 [Changelog]
+dfn_7zip (18.01-1)
+	* Neue Upstreamversion
+	* Anpassungen gem. o4i-Richtlinie (Desktop-Link, Logo, Silent-Option)
+	* alte uib Copyrights (Überbleibsel von opsi-template) entfernt
+	* $PrettyName$ -> $ProductName$
+	* Integration Patch (von Martin Niebergall): Fix Uninstall-Routine Installationen mit Exe-Installer
+-- Thomas Besser (archIT/KIT) <thomas.besser@kit.edu>, 01.02.2018
+
+dfn_7zip (16.04-1)
+	* neue Upstreamversion
+-- Thomas Besser (archIT/KIT) <thomas.besser@kit.edu>, 05.10.2016
+
 dfn_7zip (16.03-1)
 	* neue Upstreamversion
 	* o4i-Logo aktualisiert

@@ -9,7 +9,7 @@ id: dfn_7zip
 name: 7zip
 description: Dateiarchivierungs- und Kompressionswerkzeug mit Unterstützung gängiger Formate
 advice: 
-version: 18.01
+version: 18.05
 priority: 0
 licenseRequired: False
 productClasses: 
@@ -64,6 +64,12 @@ values: ["/qb!", "/qn"]
 default: ["/qb!"]
 
 [Changelog]
+dfn_7zip (18.05-1)
+
+	* minor update, only .msi changed
+
+ -- Detlef Krummel  <krummel@gei.de>, 02.05.2018
+
 dfn_7zip (18.01-1)
 	* Neue Upstreamversion
 	* Anpassungen gem. o4i-Richtlinie (Desktop-Link, Logo, Silent-Option)
